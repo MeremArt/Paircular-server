@@ -1,16 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const app = express();
 require("dotenv").config();
+
+const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Connect to MongoDB Atlas
-const atlasConnectionUri =
-  "mongodb+srv://ugofranklin22:1cL7qzwzebnLZPwG@nodeexpressproject.ctgvhgp.mongodb.net/?retryWrites=true&w=majority";
+// Connect to MongoDB Atlas using environment variable
+const atlasConnectionUri = process.env.MONGO_URL;
+
 mongoose.connect(atlasConnectionUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -41,7 +42,7 @@ app.post("/api/v1/submit", async (req, res) => {
       message: "Data received and stored successfully.",
     });
   } catch (error) {
-    console.error("Error saving data to MongoDB:", error);
+    console.error("Error saving data to MongoDB:", error.message);
     res.status(500).json({ error: "Internal server error." });
   }
 });
