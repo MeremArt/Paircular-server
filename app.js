@@ -10,8 +10,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB Atlas using environment variable
-const atlasConnectionUri =
-  "mongodb+srv://ugofranklin22:1cL7qzwzebnLZPwG@nodeexpressproject.ctgvhgp.mongodb.net/?retryWrites=true&w=majority";
+const atlasConnectionUri = process.env.MONGO_URL;
 
 mongoose.connect(atlasConnectionUri, {
   useNewUrlParser: true,
