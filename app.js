@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const tasksRouter = require(`./routes/tasks`);
 const notFoundMiddleware = require(`./middleware/not-found.js`);
 const errorMiddleware = require(`./middleware/error-handler.js`);
 require("dotenv").config();
@@ -52,7 +53,8 @@ app.post("/api/v1/submit", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
+//
+app.use(`/api/v1/paircular-holmes`, tasksRouter);
 const port = process.env.PORT || 7000;
 
 app.listen(port, () => {
