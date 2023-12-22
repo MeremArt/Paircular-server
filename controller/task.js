@@ -1,6 +1,16 @@
-const asyncWrapper = require(`../middleware/Async`);
+const asyncWrapper = require("../middleware/Async");
+const mongoose = require("mongoose");
 
-const waitList = asyncWrapper(async (res, req) => {
+// Define the data schema
+const dataSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+});
+
+// Create the Data model using the schema
+const Data = mongoose.model("Data", dataSchema);
+
+const waitList = asyncWrapper(async (req, res) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
