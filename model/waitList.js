@@ -16,6 +16,7 @@ const dataSchema = new mongoose.Schema({
   },
   location: {
     type: String,
+    required: [true, "must provide location"],
   },
   createdAt: {
     type: Date,
