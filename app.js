@@ -4,7 +4,7 @@ const express = require("express");
 const app = express(`./db/connect.js`);
 
 const mongoose = require("mongoose");
-const connectDB = require(`./`);
+const connectDB = require(`./db/connect`);
 const cors = require("cors");
 const tasksRouter = require(`./routes/tasks`);
 const notFoundMiddleware = require(`./middleware/not-found.js`);
@@ -44,3 +44,5 @@ const start = async () => {
     console.log(error);
   }
 };
+
+start();
