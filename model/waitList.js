@@ -1,27 +1,29 @@
-const mongoose = require(`mongoose`);
+const mongoose = require("mongoose");
 
 const dataSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "must provide name"],
+    required: [true, "Must provide a name."],
     trim: true,
   },
   email: {
     type: String,
-    required: [true, `email price must be provided`],
+    required: [true, "Must provide an email."],
   },
   profession: {
     type: String,
-    required: [true, "must provide profession"],
+    required: [true, "Must provide a profession."],
   },
   location: {
     type: String,
-    required: [true, "must provide location"],
+    required: [true, "Must provide a location."],
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Data", dataSchema);
+const Data = mongoose.model("Data", dataSchema);
+
+module.exports = Data;
