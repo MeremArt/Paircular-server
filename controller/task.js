@@ -54,13 +54,14 @@ const signUp = asyncWrapper(async (req, res) => {
 });
 
 const signIn = asyncWrapper(async (req, res) => {
-  const { name, email } = req.body;
+  const { email, password } = req.body;
 
-  if (!name || !email) {
-    return res.status(400).json({ error: `Name and email are required` });
+  if (!email || !password) {
+    return res.status(400).json({ error: `Password and email are required` });
   }
   try {
-    const existingUser = await Data.findOne({ name, email });
+    const existingUser = await Data.findOne({ email, password });
+
     if (!existingUser) {
       return res.status(404).json({ error: `user not found.Please sign up ` });
     }
