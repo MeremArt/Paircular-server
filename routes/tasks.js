@@ -1,8 +1,15 @@
-const express = require(`express`);
+const express = require("express");
 const router = express.Router();
 
-const { waitList } = require(`../controller/task`);
+const { waitList, signIn, signUp } = require("../controller/task");
 
-router.route(`/submit`).post(waitList);
+// Route for signing up
+router.post("/signup", signUp);
+
+// Route for signing in
+router.post("/signin", signIn);
+
+// Route for signing in
+router.post("/waitlist", waitList);
 
 module.exports = router;
