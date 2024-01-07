@@ -28,7 +28,7 @@ const waitList = asyncWrapper(async (req, res) => {
 const signUp = asyncWrapper(async (req, res) => {
   const { name, email, profession, location, password } = req.body;
 
-  if (!name || !email || profession) {
+  if (!name || !email || !profession) {
     return res.status(400).json({ error: `Name and email are required` });
   }
 
@@ -40,7 +40,7 @@ const signUp = asyncWrapper(async (req, res) => {
         .json({ error: `Email is already registered.Please sign in ` });
     }
 
-    const newUser = new Data({ name, email, profession, location });
+    const newUser = new Data({ name, email, profession, location, password });
     await newUser.save();
 
     res.json({
