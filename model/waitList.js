@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 
 const dataSchema = new mongoose.Schema({
-  firstname: {
+  name: {
     type: String,
-    required: [true, "Must provide a firstname."],
+    required: [true, "Must provide a name."],
     trim: true,
   },
-  lastname: {
-    type: String,
-    required: [true, "Must provide a lastname."],
-  },
+
   email: {
     type: String,
     required: [true, "Must provide an email."],

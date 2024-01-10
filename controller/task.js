@@ -25,11 +25,15 @@ const waitList = asyncWrapper(async (req, res) => {
   }
 });
 
+const bcrypt = require("bcrypt");
+
 const signUp = asyncWrapper(async (req, res) => {
   const { name, email, profession, location, password } = req.body;
 
-  if (!name || !email || !profession) {
-    return res.status(400).json({ error: `Name and email are required` });
+  if (!name || !email || !profession || !password) {
+    return res.status(400).json({
+      error: "Name, email, profession, and password are required fields.",
+    });
   }
 
   try {
@@ -37,19 +41,28 @@ const signUp = asyncWrapper(async (req, res) => {
     if (existingUser) {
       return res
         .status(409)
-        .json({ error: `Email is already registered.Please sign in ` });
+        .json({ error: "Email is already registered. Please sign in." });
     }
 
-    const newUser = new Data({ name, email, profession, location, password });
+    // Generate a random salt and hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new Data({
+      name,
+      email,
+      profession,
+      location,
+      password: hashedPassword,
+    });
     await newUser.save();
 
-    res.json({
+    res.status(201).json({
       success: true,
-      message: `Sign-up successful`,
+      message: "Sign-up successful",
     });
   } catch (error) {
-    console.error(`Error during sign-up:`, error.message);
-    res.status(500).json({ error: `Internal server error` });
+    console.error("Error during sign-up:", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -57,21 +70,32 @@ const signIn = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: `Password and email are required` });
+    return res
+      .status(400)
+      .json({ error: "Password and email are required fields." });
   }
+
   try {
-    const existingUser = await Data.findOne({ email, password });
+    const existingUser = await Data.findOne({ email });
 
     if (!existingUser) {
-      return res.status(404).json({ error: `user not found.Please sign up ` });
+      return res.status(404).json({ error: "User not found. Please sign up." });
     }
+
+    // Use bcrypt.compare to check if the entered password is correct
+    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Incorrect password." });
+    }
+
     res.json({
       success: true,
-      message: `Sign-in successful`,
+      message: "Sign-in successful",
     });
   } catch (error) {
-    console.error(`Error during sign-in`, error.message);
-    res.status(500).json({ error: `Internal server error` });
+    console.error("Error during sign-in:", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
