@@ -89,7 +89,7 @@ const signIn = asyncWrapper(async (req, res) => {
       return res.status(401).json({ error: "Incorrect password." });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Sign-in successful",
     });
