@@ -1,14 +1,17 @@
 const asyncWrapper = require("../middleware/Async");
 const mongoose = require("mongoose");
 const Data = require(`../model/waitList`);
+const jwt = require(`jsonwebtoken`);
+const { StatusCodes } = require("http-status-codes");
+const { BadRequest } = require(`../error`);
 
 const waitList = asyncWrapper(async (req, res) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
-    return res
-      .status(400)
-      .json({ error: "Name and email are required fields." });
+    return res.status(StatusCodes.BadRequest).json({
+      error: "Name and email are required fields.",
+    });
   }
 
   const newData = new Data({ name, email });
