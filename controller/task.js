@@ -3,28 +3,28 @@ const mongoose = require("mongoose");
 const Data = require(`../model/waitList`);
 const jwt = require(`jsonwebtoken`);
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest } = require(`../error`);
+const { BadRequestError, ExistingUserError } = require("../error");
 
 const waitList = asyncWrapper(async (req, res) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
-    return res.status(StatusCodes.BadRequest).json({
-      error: "Name and email are required fields.",
-    });
+    throw new BadRequestError("Please provide email and password");
   }
 
   const newData = new Data({ name, email });
 
   try {
     await newData.save();
-    res.json({
+    res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Data received and stored successfully.",
     });
   } catch (error) {
     console.error("Error saving data to MongoDB:", error.message);
-    res.status(500).json({ error: "Internal server error." });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error." });
   }
 });
 
@@ -34,17 +34,17 @@ const signUp = asyncWrapper(async (req, res) => {
   const { name, email, profession, location, password } = req.body;
 
   if (!name || !email || !profession || !password) {
-    return res.status(400).json({
-      error: "Name, email, profession, and password are required fields.",
-    });
+    throw new BadRequestError(
+      "Name, email, profession, and password are required fields."
+    );
   }
 
   try {
     const existingUser = await Data.findOne({ email });
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ error: "Email is already registered. Please sign in." });
+      throw new ExistingUserError(
+        "Email is already registered. Please sign in."
+      );
     }
 
     // Generate a random salt and hash the password
@@ -73,16 +73,16 @@ const signIn = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ error: "Password and email are required fields." });
+    throw new BadRequestError("Password and email are required fields.");
   }
 
   try {
     const existingUser = await Data.findOne({ email });
 
     if (!existingUser) {
-      return res.status(404).json({ error: "User not found. Please sign up." });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "User not found. Please sign up." });
     }
 
     // Use bcrypt.compare to check if the entered password is correct
@@ -92,13 +92,15 @@ const signIn = asyncWrapper(async (req, res) => {
       return res.status(401).json({ error: "Incorrect password." });
     }
 
-    res.status(200).json({
+    res.status(StatusCodes.OK).json({
       success: true,
       message: "Sign-in successful",
     });
   } catch (error) {
     console.error("Error during sign-in:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
   }
 });
 
