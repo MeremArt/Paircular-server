@@ -74,7 +74,9 @@ const signUp = asyncWrapper(async (req, res) => {
     });
   } catch (error) {
     console.error("Error during sign-up:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Internal server error" });
   }
 });
 
