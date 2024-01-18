@@ -1,9 +1,18 @@
 const asyncWrapper = require("../middleware/Async");
+
 const mongoose = require("mongoose");
+
 const Data = require(`../model/waitList`);
+
 const jwt = require(`jsonwebtoken`);
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, ExistingUserError } = require("../error");
+
+const generateToken = (userId) => {
+  const secretKey = process.env.JWT_SECRET;
+  const expiresIn = "1h"; // Token expiration time, adjust as needed
+  return jwt.sign({ userId }, secretKey, { expiresIn });
+};
 
 const waitList = asyncWrapper(async (req, res) => {
   const { name, email } = req.body;
@@ -92,9 +101,11 @@ const signIn = asyncWrapper(async (req, res) => {
       return res.status(401).json({ error: "Incorrect password." });
     }
 
+    const token = generateToken(existingUser._id);
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Sign-in successful",
+      token,
     });
   } catch (error) {
     console.error("Error during sign-in:", error.message);
@@ -104,8 +115,13 @@ const signIn = asyncWrapper(async (req, res) => {
   }
 });
 
+const dashboard = asyncWrapper(async (req, res) => {
+  console.log("fix-it");
+});
+
 module.exports = {
   waitList,
   signIn,
   signUp,
+  dashboard,
 };
