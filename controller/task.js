@@ -68,7 +68,7 @@ const signUp = asyncWrapper(async (req, res) => {
     });
     await newUser.save();
 
-    res.status(201).json({
+    res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Sign-up successful",
     });
