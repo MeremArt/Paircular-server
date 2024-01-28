@@ -8,12 +8,6 @@ const jwt = require(`jsonwebtoken`);
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, ExistingUserError } = require("../error");
 
-const generateToken = (userId) => {
-  const secretKey = process.env.JWT_SECRET;
-  const expiresIn = "1h"; // Token expiration time, adjust as needed
-  return jwt.sign({ userId }, secretKey, { expiresIn });
-};
-
 const waitList = asyncWrapper(async (req, res) => {
   const { name, email } = req.body;
 
@@ -36,15 +30,13 @@ const waitList = asyncWrapper(async (req, res) => {
       .json({ error: "Internal server error." });
   }
 });
-
-const bcrypt = require("bcrypt");
-
+//signup
 const signUp = asyncWrapper(async (req, res) => {
   const { name, email, profession, location, password } = req.body;
 
   if (!name || !email || !profession || !password) {
     throw new BadRequestError(
-      "Name, email, profession, and password are required fields."
+      "name, email, profession, and password are required fields."
     );
   }
 
@@ -56,21 +48,20 @@ const signUp = asyncWrapper(async (req, res) => {
       );
     }
 
-    // Generate a random salt and hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = new Data({
       name,
       email,
       profession,
       location,
-      password: hashedPassword,
+      password,
     });
     await newUser.save();
-
+    const token = newUser.createJWT();
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Sign-up successful",
+      token,
+      newUser: { name: newUser.name },
     });
   } catch (error) {
     console.error("Error during sign-up:", error.message);
@@ -84,7 +75,7 @@ const signIn = asyncWrapper(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError("Password and email are required fields.");
+    throw new BadRequestError("password and email are required fields.");
   }
 
   try {
@@ -96,14 +87,13 @@ const signIn = asyncWrapper(async (req, res) => {
         .json({ error: "User not found. Please sign up." });
     }
 
-    // Use bcrypt.compare to check if the entered password is correct
     const passwordMatch = await bcrypt.compare(password, existingUser.password);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: "Incorrect password." });
     }
 
-    const token = generateToken(existingUser._id);
+    const token = existingUser.createJWT();
     res.status(StatusCodes.OK).json({
       success: true,
       message: "Sign-in successful",
