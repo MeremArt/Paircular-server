@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middleware/Async");
-
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
 const Data = require(`../model/waitList`);
@@ -86,11 +86,9 @@ const signIn = asyncWrapper(async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: "User not found. Please sign up." });
     }
-
-    const passwordMatch = await bcrypt.compare(password, existingUser.password);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Incorrect password." });
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      throw new UnauthenticatedError("Invalid Credentials");
     }
 
     const token = existingUser.createJWT();

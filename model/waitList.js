@@ -50,6 +50,11 @@ dataSchema.methods.createJWT = function () {
   );
 };
 
+dataSchema.methods.comparePassword = async function (canditatePassword) {
+  const isMatch = await bcrypt.compare(canditatePassword, this.password);
+  return isMatch;
+};
+
 const Data = mongoose.model("Data", dataSchema);
 
 module.exports = Data;
