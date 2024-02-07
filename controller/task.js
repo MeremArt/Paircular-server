@@ -41,6 +41,8 @@ const waitList = asyncWrapper(async (req, res) => {
 
 //Function to send email address
 async function sendWelcomeEmail(email, name) {
+  const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+
   const transporter = nodemailer.createTransport({
     service: `gmail`,
     auth: {
@@ -208,7 +210,7 @@ async function sendWelcomeEmail(email, name) {
                   <!-- Start Main Content Area -->
                   <tr>
                     <td class="wrapper">
-                      <h2>Hello, ${newUser.name}</h2>
+                      <h2>Hello, ${capitalizedName}</h2>
                       <img
                         class="image"
                         src="https://res.cloudinary.com/dtfvdjvyr/image/upload/v1707344763/mail-cover_dfvdjg.png"
@@ -332,7 +334,7 @@ const signIn = asyncWrapper(async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: "User not found. Please sign up." });
     }
-    const isPasswordCorrect = await user.comparePassword(password);
+    const isPasswordCorrect = await existingUser.comparePassword(password);
     if (!isPasswordCorrect) {
       throw new UnauthenticatedError("Invalid Credentials");
     }
