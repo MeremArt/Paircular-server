@@ -2,39 +2,42 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const dataSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Must provide a name."],
-    trim: true,
-  },
+const dataSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Must provide a name."],
+      trim: true,
+    },
 
-  email: {
-    type: String,
-    required: [true, "Must provide an email."],
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please provide a valid email",
-    ],
-    unique: true,
+    email: {
+      type: String,
+      required: [true, "Must provide an email."],
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please provide a valid email",
+      ],
+      unique: true,
+    },
+    profession: {
+      type: String,
+      required: [true, "Must provide a profession."],
+    },
+    password: {
+      type: String,
+      required: [true, "Must provide a password."],
+    },
+    location: {
+      type: String,
+      required: [true, "Must provide a location."],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  profession: {
-    type: String,
-    required: [true, "Must provide a profession."],
-  },
-  password: {
-    type: String,
-    required: [true, "Must provide a password."],
-  },
-  location: {
-    type: String,
-    required: [true, "Must provide a location."],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
 dataSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
