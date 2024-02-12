@@ -3,15 +3,30 @@ const router = express.Router();
 
 const { waitList, signIn, signUp, dashboard } = require("../controller/task");
 
-// Route for signing up
+const { uploadProductImage } = require("../controller/UploadProduct");
+
+const {
+  createProduct,
+  getAllproducts,
+  deleteProduct,
+  editProduct,
+} = require("../controller/OwnErs");
+
+// Routes for authentication
 router.post("/signup", signUp);
-
-// Route for signing in
 router.post("/signin", signIn);
-
-// Route for signing in
 router.post("/waitlist", waitList);
 
-router.route("/dashboard").get(dashboard);
+// Route for dashboard
+router.get("/dashboard", dashboard);
+
+// Routes for product management
+router.post("/uploads", uploadProductImage);
+router
+  .route("/products")
+  .get(getAllproducts)
+  .delete(deleteProduct)
+  .patch(editProduct)
+  .post(createProduct);
 
 module.exports = router;

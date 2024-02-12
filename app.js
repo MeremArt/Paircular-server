@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const connectDB = require(`./db/connect`);
 const authenticateUser = require(`./middleware/auth`);
 const cors = require("cors");
+
+const fileUpload = require("express-fileupload");
 const tasksRouter = require(`./routes/tasks`);
 
 const notFoundMiddleware = require(`./middleware/not-found.js`);
@@ -16,7 +18,7 @@ const errorMiddleware = require(`./middleware/error-handler.js`);
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+app.use(fileUpload({ useTempFiles: true }));
 app.use(`/api/v1/paircular-holmes`, tasksRouter);
 
 //ErrorHandling
