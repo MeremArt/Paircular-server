@@ -18,6 +18,8 @@ const errorMiddleware = require(`./middleware/error-handler.js`);
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static("./public"));
 app.use(fileUpload({ useTempFiles: true }));
 app.use(`/api/v1/paircular-holmes`, tasksRouter);
 
