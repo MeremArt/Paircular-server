@@ -8,7 +8,12 @@ const mongoose = require("mongoose");
 const connectDB = require(`./db/connect`);
 const authenticateUser = require(`./middleware/auth`);
 const cors = require("cors");
-
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 const fileUpload = require("express-fileupload");
 const tasksRouter = require(`./routes/tasks`);
 
