@@ -56,8 +56,25 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const editProduct = (req, res) => {
-  res.send(`edit product`);
+const editProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const { location, amount, occupants } = req.body;
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { location, amount, occupants },
+      { new: true }
+    );
+    if (!updatedProduct) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "Product not found" });
+    }
+    res.status(StatusCodes.OK).json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Internal Server Error");
+  }
 };
 
 module.exports = {
