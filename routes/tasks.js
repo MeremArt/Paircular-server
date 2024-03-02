@@ -23,7 +23,7 @@ router.get("/dashboard", dashboard);
 // Routes for product management
 router.post("/uploads", uploadProductImage);
 router
-  .route("/products")
+  .route("/products/:productId")
   .get(getAllproducts)
   .delete(deleteProduct)
   .patch(editProduct)
