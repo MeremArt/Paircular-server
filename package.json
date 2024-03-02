@@ -5,7 +5,7 @@
   "main": "app.js",
   "node": "14.x",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon -r dotenv/config app.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.26.2",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
@@ -25,7 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "nodemailer": "^6.9.9",
-    "nodeman": "^1.1.2",
+    "nodemon": "^3.0.3",
     "xss-clean": "^0.1.4"
   }
 }
