@@ -14,6 +14,8 @@ const authenticateUser = require(`./middleware/auth`);
 const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
 const tasksRouter = require(`./routes/tasks`);
+const indexRouter = require(`./routes/index.route.js`);
+
 const notFoundMiddleware = require(`./middleware/not-found.js`);
 const errorMiddleware = require(`./middleware/error-handler.js`);
 
@@ -34,6 +36,8 @@ app.use(express.static("./public"));
 app.use(fileUpload({ useTempFiles: true }));
 
 app.use(`/api/v1/paircular-holmes`, tasksRouter);
+app.use(`/api/v1/paircular-holmes`, indexRouter);
+
 
 // Error Handling Middleware
 app.use(notFoundMiddleware);
@@ -43,10 +47,11 @@ const port = process.env.PORT || 7000;
 
 // Graceful shutdown
 process.on("SIGINT", () => {
-  mongoose.connection.close(() => {
-    console.log("MongoDB disconnected through app termination");
-    process.exit(0);
-  });
+  mongoose.connection.close()
+    .then(() => {
+      console.log("\nMongoDB disconnected through app termination");
+      process.exit(0);
+    });
 });
 
 // Connect to MongoDB Atlas using environment variable

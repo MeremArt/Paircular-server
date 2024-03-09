@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 
 const dataSchema = new mongoose.Schema(
@@ -27,6 +28,9 @@ const dataSchema = new mongoose.Schema(
       type: String,
       required: [true, "Must provide a password."],
     },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
     location: {
       type: String,
       required: [true, "Must provide a location."],
@@ -57,6 +61,15 @@ dataSchema.methods.comparePassword = async function (canditatePassword) {
   const isMatch = await bcrypt.compare(canditatePassword, this.password);
   return isMatch;
 };
+
+// generate password reset token
+dataSchema.methods.generateResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+}
 
 const Data = mongoose.model("Data", dataSchema);
 
