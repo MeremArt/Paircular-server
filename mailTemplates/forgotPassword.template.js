@@ -222,7 +222,7 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
                                 text-transform: uppercase;
                               "
                               title="https://paircular-app-git-main-meremart.vercel.app/reset-password/${passwordResetToken}"
-                              href="%LINK%"
+                              href="https://paircular-app-git-main-meremart.vercel.app/reset-password"
                               target="_blank"
                               rel="noopener"
                               >Reset password</a
@@ -256,10 +256,9 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
   </body>
 </html>
 `,
-  }
-
-};
+  };
+}
 
 module.exports = {
-  forgotPasswordMailOptions
-}
+  forgotPasswordMailOptions,
+};
