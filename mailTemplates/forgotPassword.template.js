@@ -226,6 +226,7 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
                               target="_blank"
                               rel="noopener"
                               >Reset password</a
+                              <p>Link expires after 5 mins</p>
                             >
                           </td>
                         </tr>
