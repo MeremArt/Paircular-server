@@ -1,11 +1,11 @@
 const Product = require(`../model/Product`);
+const productService = require(`../service/product.service`);
 const { BadRequestError, ExistingUserError } = require("../error");
 const { StatusCodes } = require("http-status-codes");
-const Products = require(`../model/Product`);
 
 const createProduct = async (req, res) => {
-  const { location, amount, occupants } = req.body;
-  if (!location || !amount || !occupants) {
+  const { location, amount, occupants, availabilityDate } = req.body;
+  if (!location || !amount || !occupants || !availabilityDate) {
     throw new BadRequestError("Fill the inputs ");
   }
   try {
@@ -13,6 +13,7 @@ const createProduct = async (req, res) => {
       location,
       amount,
       occupants,
+      availabilityDate,
     });
     if (existingProduct) {
       throw new ExistingUserError(
@@ -23,6 +24,7 @@ const createProduct = async (req, res) => {
       location,
       amount,
       occupants,
+      availabilityDate,
     });
     res.status(StatusCodes.CREATED).json(newProduct);
   } catch (error) {
@@ -33,7 +35,7 @@ const createProduct = async (req, res) => {
 
 const getAllproducts = async (req, res) => {
   try {
-    const products = await product.find({});
+    const products = await Product.find({});
     res.status(StatusCodes.OK).json({ products });
   } catch (error) {
     console.log(error);
@@ -42,6 +44,7 @@ const getAllproducts = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
+  const productId = req.params.productId;
   try {
     const product = await Product.findByIdAndDelete(productId);
     if (!product) {
@@ -58,11 +61,11 @@ const deleteProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   const productId = req.params.productId;
-  const { location, amount, occupants } = req.body;
+  const { location, amount, occupants, availabilityDate } = req.body;
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { location, amount, occupants },
+      { location, amount, occupants, availabilityDate },
       { new: true }
     );
     if (!updatedProduct) {
@@ -82,4 +85,5 @@ module.exports = {
   deleteProduct,
   editProduct,
   getAllproducts,
+  searchIndexProducts,
 };
