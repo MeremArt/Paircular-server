@@ -85,5 +85,4 @@ module.exports = {
   deleteProduct,
   editProduct,
   getAllproducts,
-  searchIndexProducts,
 };
