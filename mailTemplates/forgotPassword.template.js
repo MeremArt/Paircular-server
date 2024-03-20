@@ -236,8 +236,9 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
                                 >Reset password</a
                               >
                             </td>
-                            <p>Link expires after 5 mins</p>
+                          
                           </tr>
+                          <p>Link expires after 5 mins</p>
                         </tbody>
                       </table>
                     </center>
