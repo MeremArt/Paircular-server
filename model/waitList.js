@@ -20,6 +20,13 @@ const dataSchema = new mongoose.Schema(
       ],
       unique: true,
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerifiedAt: Date,
+    emailVerificationToken: String,
+    emailVerificationTokenExpires: Date,
     profession: {
       type: String,
       required: [true, "Must provide a profession."],
@@ -69,6 +76,15 @@ dataSchema.methods.generateResetPasswordToken = function () {
   this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+}
+
+// generate email verification token
+dataSchema.methods.generateEmailVerificationToken = function () {
+  const verificationToken = crypto.randomBytes(20).toString('hex');
+  this.emailVerificationToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+  this.emailVerificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
+
+  return verificationToken;
 }
 
 const Data = mongoose.model("Data", dataSchema);
