@@ -1,5 +1,9 @@
 const asyncWrapper = require("../middleware/Async");
 
+const { emailVerificationMailOptions } = require('../mailTemplates/emailVerification.template');
+
+const { createTransporter } = require('../configs/nodemailer.config');
+
 const bcrypt = require("bcryptjs");
 
 const mongoose = require("mongoose");
@@ -301,15 +305,35 @@ const signUp = asyncWrapper(async (req, res) => {
       location,
       password,
     });
+
     await newUser.save();
+
     // Send welcome email
     await sendWelcomeEmail(newUser.email, newUser.name);
+
     const token = newUser.createJWT();
+
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Sign-up successful",
       token,
       newUser: { name: newUser.name },
+    });
+
+    // generate and attach a email verification token to the user's profile
+    const verificationToken = newUser.generateEmailVerificationToken()
+    await newUser.save()
+
+    // sends a mail to the user *includes email verification link with token*
+    const transporter = createTransporter();
+    const mailOptions = emailVerificationMailOptions(newUser, verificationToken);
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to send email verification mail' });
+      }
+      console.log('Email verification mail sent successfully');
     });
   } catch (error) {
     console.error("Error during sign-up:", error.message);

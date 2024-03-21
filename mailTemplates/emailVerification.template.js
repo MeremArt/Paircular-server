@@ -1,11 +1,11 @@
-function forgotPasswordMailOptions(user, passwordResetToken) {
-  return {
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: `Reset your password`,
-    sender: `Paircular Holmes`,
-    html: ` <!DOCTYPE html>
-    <html lang="en">
+function emailVerificationMailOptions(user, emailVerificationToken) {
+    return {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: `Verify Email Address`,
+        sender: `Paircular Holmes`,
+        html: ` <!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,12 +46,7 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
         background-color: #f8f8f8;
         width: 100%;
       }
-      .mcnButtonContent:hover {
-        font-size: 16px;
-        padding: 24px 48px 24px 48px;
-        border-radius: 30px;
-        background-color: #fa6060;
-      }
+
       .container {
         margin: 0 auto !important;
         max-width: 600px;
@@ -144,12 +139,6 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
           border-radius: 0 !important;
           border-right-width: 0 !important;
         }
-        .mcnButtonContent:hover {
-          font-size: 16px;
-          padding: 24px 48px 24px 48px;
-          border-radius: 30px;
-          background-color: #fa6060; /* Change hover color here */
-        }
       }
     </style>
   </head>
@@ -183,11 +172,7 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
                     alt="Paircular Holmes Image"
                   />
                   <center>
-                    <h2>Forgot Password?</h2>
-                    <p>
-                      Not to worry, we got you! Let&rsquo;s get you a new
-                      password.
-                    </p>
+                    <h2>Kindly Verify Your Email</h2>
                     <table
                       style="
                         border-collapse: separate !important;
@@ -232,14 +217,14 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
                                 text-align: center;
                                 text-transform: uppercase;
                               "
-                              title="https://paircular-app-git-main-meremart.vercel.app/reset-password?token=${passwordResetToken}"
-                              href="https://paircular-app-git-main-meremart.vercel.app/reset-password?token=${passwordResetToken}"
+                              title="https://paircular-app-git-main-meremart.vercel.app/verify-email?token=${emailVerificationToken}"
+                              href="https://paircular-app-git-main-meremart.vercel.app/verify-email?token=${emailVerificationToken}"
                               target="_blank"
                               rel="noopener"
-                              >Reset password</a
+                              >Verify Email Address</a
+                              <p>Link expires after 24 hours</p>
                             >
                           </td>
-                          <p>Link expires after 5 mins</p>
                         </tr>
                       </tbody>
                     </table>
@@ -267,12 +252,10 @@ function forgotPasswordMailOptions(user, passwordResetToken) {
     </table>
   </body>
 </html>
-
-  
 `,
-  };
+    };
 }
 
 module.exports = {
-  forgotPasswordMailOptions,
+    emailVerificationMailOptions,
 };
