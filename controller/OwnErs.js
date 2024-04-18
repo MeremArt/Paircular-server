@@ -4,7 +4,7 @@ const { BadRequestError, ExistingUserError } = require("../error");
 const { StatusCodes } = require("http-status-codes");
 
 const createProduct = async (req, res) => {
-  const { location, amount, occupants, availabilityDate } = req.body;
+  const { location, amount, image, occupants, availabilityDate } = req.body;
   if (!location || !amount || !occupants || !availabilityDate) {
     throw new BadRequestError("Fill the inputs ");
   }
@@ -22,6 +22,7 @@ const createProduct = async (req, res) => {
     }
     const newProduct = await Product.create({
       location,
+      image,
       amount,
       occupants,
       availabilityDate,
