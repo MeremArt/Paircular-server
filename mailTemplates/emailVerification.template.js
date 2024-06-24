@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+function emailVerificationMailOptions(user, emailVerificationToken) {
+    return {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: `Verify Email Address`,
+        sender: `Paircular Holmes`,
+        html: ` <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -166,11 +172,7 @@
                     alt="Paircular Holmes Image"
                   />
                   <center>
-                    <h2>Forgot Password?</h2>
-                    <p>
-                      Not to worry, we got you! Let&rsquo;s get you a new
-                      password.
-                    </p>
+                    <h2>Kindly Verify Your Email</h2>
                     <table
                       style="
                         border-collapse: separate !important;
@@ -215,11 +217,12 @@
                                 text-align: center;
                                 text-transform: uppercase;
                               "
-                              title="Add your reset password link here"
-                              href="%LINK%"
+                              title="https://paircular-app-git-main-meremart.vercel.app/verify-email?token=${emailVerificationToken}"
+                              href="https://paircular-app-git-main-meremart.vercel.app/verify-email?token=${emailVerificationToken}"
                               target="_blank"
                               rel="noopener"
-                              >Reset password</a
+                              >Verify Email Address</a
+                              <p>Link expires after 24 hours</p>
                             >
                           </td>
                         </tr>
@@ -249,3 +252,10 @@
     </table>
   </body>
 </html>
+`,
+    };
+}
+
+module.exports = {
+    emailVerificationMailOptions,
+};
