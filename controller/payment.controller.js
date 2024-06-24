@@ -18,7 +18,7 @@ const startPayment = async (req, res) => {
 const createPayment = async (req, res) => {
     try {
         const response = await PaymentService.createPayment(req.query);
-        return res.status(201).json({ status: 'Success', data: response });
+        return redirect(301, 'https://paircular-app.vercel.app/payment_confirmed');
     } catch (error) {
         return res.status(500).json({ status: 'Failed', message: error.message });
     }
