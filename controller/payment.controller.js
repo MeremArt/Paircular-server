@@ -4,7 +4,12 @@ const PaymentService = require('../service/payment.service');
 const startPayment = async (req, res) => {
     try {
         const response = await PaymentService.startPayment(req.body);
-        return res.status(201).json({ status: 'Success', data: response });
+        return res.status(201).json({
+            status: true,
+            url: response.data.authorization_url,
+            access_code: response.data.access_code,
+            reference: response.data.reference
+        });
     } catch (error) {
         return res.status(500).json({ status: 'Failed', message: error.message });
     }
